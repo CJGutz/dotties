@@ -281,6 +281,13 @@ vim.opt.signcolumn = "yes"
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
+-- Map ctrl z to warning
+vim.keymap.set({ 'n', 'v', 'i' }, '<C-z>', function()
+  vim.api.nvim_command 'echohl WarningMsg'
+  vim.api.nvim_command 'echo "Noob. You cannot even exit vim"'
+  vim.api.nvim_command 'echohl None'
+end, { desc = 'Show warning for ctrl-z' })
+
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
