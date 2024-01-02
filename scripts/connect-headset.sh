@@ -33,4 +33,4 @@ EOF
 fi
 
 # Print final status
-notify-send "Device $device_address is now $status"
+# notify-send "Device $device_address is now $status"

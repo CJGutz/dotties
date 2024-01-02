@@ -126,6 +126,8 @@ listrow() {
 
 alias ntnu-vpn="sudo openconnect vpn.ntnu.no -u carljgu@stud.ntnu.no"
 
+alias tar-open="tar -xvf"
+
 ei() {
 
 	[[ $1 = f* || $1 = F* ]] && repo="Frontend"
