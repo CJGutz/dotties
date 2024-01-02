@@ -45,8 +45,16 @@ install: st
 	tic -sx st.info
 	@echo Please see the README file regarding the terminfo entry of st.
 
-patch:
-	patch --merge -i $(path)
+patch: # patch url="https://patch.diff" file="/path/to/output"
+	@echo Hello $(file)
+ifndef file
+	$(error File path not defined. Use file="/path")
+endif
+ifdef url
+	wget $(url) -O $(file)
+endif
+	patch --merge -i $(file)
+	rm *.orig
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/st
