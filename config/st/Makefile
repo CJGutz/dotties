@@ -45,6 +45,9 @@ install: st
 	tic -sx st.info
 	@echo Please see the README file regarding the terminfo entry of st.
 
+patch:
+	patch --merge -i $(path)
+
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/st
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/st.1
