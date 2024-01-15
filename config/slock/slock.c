@@ -106,7 +106,7 @@ readescapedint(const char *str, int *i) {
 }
 
 static void
-writemessage(Display *dpy, Window win, int screen)
+writemessage(Display *dpy, Window win, int screen, const char *writing_color)
 {
 	int len, line_len, width, height, s_width, s_height, i, k, tab_size, r, g, b, escaped_int, curr_line_len;
 	XGCValues gr_values;
@@ -128,7 +128,7 @@ writemessage(Display *dpy, Window win, int screen)
 	tab_size = 8 * XTextWidth(fontinfo, " ", 1);
 
 	XAllocNamedColor(dpy, DefaultColormap(dpy, screen),
-		 text_color, &color, &dummy);
+		 writing_color, &color, &dummy);
 
 	gr_values.font = fontinfo->fid;
 	gr_values.foreground = color.pixel;
@@ -338,7 +338,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
                     else
                         XSetWindowBackground(dpy, locks[screen]->win, locks[screen]->colors[0]);
 					XClearWindow(dpy, locks[screen]->win);
-					writemessage(dpy, locks[screen]->win, screen);
+					writemessage(dpy, locks[screen]->win, screen, colorname[color]);
 				}
 				oldc = color;
 			}
@@ -589,7 +589,7 @@ main(int argc, char **argv) {
 		die("slock: out of memory\n");
 	for (nlocks = 0, s = 0; s < nscreens; s++) {
 		if ((locks[s] = lockscreen(dpy, &rr, s)) != NULL) {
-			writemessage(dpy, locks[s]->win, s);
+			writemessage(dpy, locks[s]->win, s, colorname[INIT]);
 			nlocks++;
 		} else {
 			break;
