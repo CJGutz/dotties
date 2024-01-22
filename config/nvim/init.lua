@@ -501,23 +501,6 @@ local servers = {
       telemetry = { enable = false },
     },
   },
-
-  pyright = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-        diagnosticMode = 'workspace',
-        ignore = { "test_*.py" },
-      },
-      formatting = {
-        provider = 'black',
-        black = {
-          lineLength = 100,
-        },
-      },
-    },
-  },
 }
 
 -- Setup neovim lua configuration
