@@ -166,6 +166,13 @@ alias clip="xclip -selection clipboard"
 
 alias wtr="curl wttr.in | less"
 
+# Devour aliases
+alias evince="devour evince"
+alias feh="devour feh"
+alias display="devour display"
+alias gimp="devour gimp"
+alias libreoffice="devour libreoffice"
+
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then
     source ~/.zsh_secrets
@@ -210,3 +217,5 @@ source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
 [ -n "$DISPLAY" ]  && command -v xdo >/dev/null 2>&1 && xdo id > /tmp/term-wid-"$$"
 trap "( rm -f /tmp/term-wid-"$$" )" EXIT HUP
 
+# Do not store cache of zcompdump
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST

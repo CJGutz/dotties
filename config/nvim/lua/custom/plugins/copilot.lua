@@ -9,6 +9,7 @@ return {
       ["*"] = false,
       ["javascript"] = true,
       ["typescript"] = true,
+      ["tsx"] = true,
       ["lua"] = true,
       ["rust"] = true,
       ["c"] = true,
