@@ -219,3 +219,10 @@ trap "( rm -f /tmp/term-wid-"$$" )" EXIT HUP
 
 # Do not store cache of zcompdump
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
+
+# bun completions
+[ -s "/home/carl/.bun/_bun" ] && source "/home/carl/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
