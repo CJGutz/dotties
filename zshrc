@@ -128,39 +128,6 @@ alias ntnu-vpn="sudo openconnect vpn.ntnu.no -u carljgu@stud.ntnu.no"
 
 alias tar-open="tar -xvf"
 
-ei() {
-
-	[[ $1 = f* || $1 = F* ]] && repo="Frontend"
-	[[ $1 = b* || $1 = B* ]] && repo="Backend"
-
-	open "https://eisolutions.atlassian.net/jira/software/projects/ETT/boards/4"
-	open "https://github.com/EI-Solutions/$repo"
-	code ~/eisolutions/$repo
-	cd ~/eisolutions/Frontend
-	gnome-terminal --title Backend --working-directory ~/eisolutions/Backend
-	
-}
-
-screencast() {
-	display_res_pos=( $(xrandr | awk '/connected/ {if ($3 ~ /\+/) print $1 " " $3 ","; else if ($4 ~ /\+/) print $1 " " $4 ",";}') )
-	echo Displays: $display_res_pos "\n\n"
-
-	selected=$display_res_pos[$1*2+2]
-	res_pos=$(echo $selected | awk '{split($1, a, "+"); print a[1] " " a[2] " " a[3]}')
-	res=$(echo $res_pos | awk '{print $1}')
-	pos=$(echo $res_pos | awk '{print $2 "," $3}')
-
-	ffmpeg -f x11grab -r 25 -s $res -i :1+$pos -vcodec libx264 -crf 28 $2
-}
-
-
-search_whatis() {
-	whatis $(ls $(echo $PATH | tr ":" "\n")) 2> /dev/null | grep $1
-}
-
-markdown_display() {
-	markdown_py $1 > temp_markdown_html && firefox temp_markdown_html && sleep 1 && rm temp_markdown_html
-}
 
 alias clip="xclip -selection clipboard"
 
@@ -168,8 +135,8 @@ alias wtr="curl wttr.in | less"
 
 # Devour aliases
 alias evince="devour evince"
-alias feh="devour feh"
 alias display="devour display"
+alias eog="devour eog"
 alias gimp="devour gimp"
 alias libreoffice="devour libreoffice"
 
@@ -181,19 +148,14 @@ fi
 # Set settings
 set -o vi
 
-# Java
 
+
+
+# Exports
+
+# Java
 export JAVA_HOME=/usr
 export PATH=$PATH:$JAVA_HOME/bin 
-export PATH=$PATH:$JAVA_HOME/bin 
-
-# pnpm
-export PNPM_HOME="/home/carljgu/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
 
 export NVM_DIR="/home/carl/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
