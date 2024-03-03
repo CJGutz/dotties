@@ -149,9 +149,10 @@ fi
 set -o vi
 
 
-
-
 # Exports
+
+# Own scripts
+export PATH="$PATH:/home/carl/scripts"
 
 # Java
 export JAVA_HOME=/usr
