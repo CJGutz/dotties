@@ -139,6 +139,7 @@ alias display="devour display"
 alias eog="devour eog"
 alias gimp="devour gimp"
 alias libreoffice="devour libreoffice"
+alias mpv="devour mpv --keep-open=yes"
 
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then

@@ -166,7 +166,14 @@ require('lazy').setup({
       },
     },
   },
-
+  {
+    "nvim-telescope/telescope-media-files.nvim",
+    dependencies = {
+      "nvim-lua/popup.nvim",
+      "nvim-lua/plenary.nvim"
+    },
+    requires = {"nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
+  },
   {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
@@ -278,6 +285,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
+  extensions = {
+    media_files = {
+      filetypes = { 'png', 'webp', 'jpg', 'jpeg', 'JPG' },
+      find_cmd = 'rg',
+    }
+  },
   defaults = {
     mappings = {
       i = {
@@ -290,6 +303,7 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+pcall(require('telescope').load_extension, 'media_files')
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
