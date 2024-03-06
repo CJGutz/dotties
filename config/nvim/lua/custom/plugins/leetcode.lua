@@ -8,7 +8,6 @@ return {
     "MunifTanjim/nui.nvim",
 
     -- optional
-    "rcarriga/nvim-notify",
     "nvim-tree/nvim-web-devicons",
   },
   opts = {
