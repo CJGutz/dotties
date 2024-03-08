@@ -6,3 +6,6 @@ font:
 window:
   opacity: 0.9
   decorations: none
+  padding:
+    x: 20
+    y: 20
