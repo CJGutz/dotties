@@ -138,7 +138,8 @@ alias gp='git_push_with_check'
 git_push_with_check() {
     git push "$@"
     if [ $? -eq 128 ]; then
-        read -p "Error: Branch not in origin. Would you like to push to origin and set upstream? (y/n): " response
+        echo "Error: Branch not in origin. Would you like to push to origin and set upstream? (y/N): " 
+        read response
         case "$response" in
             [yY])
                 git push --set-upstream origin "$(git branch --show-current)"
