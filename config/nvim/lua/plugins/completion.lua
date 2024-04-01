@@ -47,11 +47,11 @@ return {
           end,
         },
         sources = {
-          { name = "nvim_lsp", keyword_length = 2, max_item_count = 10 },
-          { name = "path", max_item_count = 10},
-          { name = "buffer", keyword_length = 3 },
-          { name = "nvim_lua", max_item_count = 10 },
-          { name = "vsnip", max_item_count = 10},
+          { name = "nvim_lsp", keyword_length = 2, max_item_count = 20, priority = 100 },
+          { name = "path", max_item_count = 5, priority = 4 },
+          { name = "vsnip", max_item_count = 5, priority = 3 },
+          { name = "nvim_lua", max_item_count = 5, priority = 2 },
+          { name = "buffer", keyword_length = 3, priority = 1},
 
         },
         preselect = cmp.PreselectMode.None,

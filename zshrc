@@ -151,6 +151,13 @@ git_push_with_check() {
     fi
 }
 
+whatis() {
+    /usr/bin/whatis $1 2> /dev/null
+    if [ $? -eq 16 ]; then
+        echo "man: $(man $1 | grep "$1 - " | xargs)"
+    fi
+}
+
 # Devour aliases
 alias evince="devour evince"
 alias display="devour display"
@@ -159,6 +166,7 @@ alias gimp="devour gimp"
 alias libreoffice="devour libreoffice"
 alias mpv="devour mpv --keep-open=yes"
 alias pqiv="devour pqiv"
+alias surf="devour surf"
 
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then
