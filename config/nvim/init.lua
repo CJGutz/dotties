@@ -361,11 +361,19 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  pyright = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = false,
+        diagnosticMode = 'workspace',
+      },
+    }
 
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
