@@ -1,29 +1,22 @@
-local user_bookmarks = vim.g.startup_bookmarks
+local user_bookmarks = vim.g.startup_bookmarks or {}
 
 local bookmark_texts = { "Bookmarks", "" }
 local user_bookmark_mappings = {}
 
-if not user_bookmarks then
-    user_bookmarks = {}
-    bookmark_texts = {}
+local function getDir(str)
+    return str:match("(.*[/\\])")
 end
 
 for key, file in pairs(user_bookmarks) do
     bookmark_texts[#bookmark_texts + 1] = key .. " " .. file
-end
-
-for key, file in pairs(user_bookmarks) do
-    user_bookmark_mappings[key] = "<cmd>e " .. file .. "<CR>"
+    user_bookmark_mappings[key] = "<cmd>e " .. file .. "<CR><cmd>cd " .. getDir(file) .. "<CR>"
 end
 
 local settings = {
     -- every line should be same width without escaped \
     header = {
         type = "text",
-        oldfiles_directory = false,
         align = "center",
-        fold_section = false,
-        title = "Header",
         margin = 5,
         content = {
         [[                                                                               _____                    ]],
@@ -40,17 +33,12 @@ local settings = {
         [[                   \|____|                |____|/                             |___|/                     ]],
         },
         highlight = "Statement",
-        default_color = "",
-        oldfiles_amount = 0,
     },
     oldfiles = {
         type = "oldfiles",
         oldfiles_directory = true,
         align = "center",
-        fold_section = false,
-        title = "Bookmarks",
         margin = 5,
-        content = "",
         highlight = "String",
         oldfiles_amount = 5,
     },
@@ -64,14 +52,11 @@ local settings = {
     },
     footer = {
         type = "text",
-        oldfiles_directory = false,
         align = "center",
-        fold_section = false,
         title = "Footer",
         margin = 5,
         content = { "Time to grind" },
         highlight = "Number",
-        default_color = "",
     },
     options = {
         after = function()
@@ -80,7 +65,6 @@ local settings = {
         end,
         mapping_keys = true,
         cursor_column = 0.5,
-        empty_lines_between_mappings = true,
         disable_statuslines = true,
         paddings = { 1, 3, 3, 3 },
     },
