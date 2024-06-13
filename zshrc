@@ -54,7 +54,7 @@ ENABLE_CORRECTION="true"
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-COMPLETION_WAITING_DOTS="%F{yellow}oh god what have you done..."
+# COMPLETION_WAITING_DOTS="%F{yellow}oh god what have you done..."
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -135,6 +135,9 @@ alias wtr="curl wttr.in | less"
 
 alias gp='git_push_with_check'
 
+
+alias pgadmin='cd /usr/pgadmin4 && docker compose up'
+
 git_push_with_check() {
     git push "$@"
     if [ $? -eq 128 ]; then
@@ -158,6 +161,10 @@ whatis() {
     fi
 }
 
+find-file() {
+    find ./ -name "*$1*"
+}
+
 # Devour aliases
 alias evince="devour evince"
 alias display="devour display"
@@ -167,6 +174,7 @@ alias libreoffice="devour libreoffice"
 alias mpv="devour mpv --keep-open=yes"
 alias pqiv="devour pqiv"
 alias surf="devour surf"
+alias qgis='devour qgis'
 
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then

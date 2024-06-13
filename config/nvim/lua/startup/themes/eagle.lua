@@ -11,6 +11,7 @@ for key, file in pairs(user_bookmarks) do
     bookmark_texts[#bookmark_texts + 1] = key .. " " .. file
     user_bookmark_mappings[key] = "<cmd>e " .. file .. "<CR><cmd>cd " .. getDir(file) .. "<CR>"
 end
+user_bookmark_mappings["E"] = "<cmd>enew<CR>"
 
 local settings = {
     -- every line should be same width without escaped \
@@ -33,6 +34,15 @@ local settings = {
         [[                   \|____|                |____|/                             |___|/                     ]],
         },
         highlight = "Statement",
+    },
+    new_buffer = {
+        type = "text",
+        align = "center",
+        margin = 5,
+        content = {
+         "Press E to open a new empty buffer",
+        },
+        highlight = "Function",
     },
     oldfiles = {
         type = "oldfiles",
@@ -79,7 +89,7 @@ local settings = {
         background = "#1f2227",
         folded_section = "#56b6c2",
     },
-    parts = { "header", "oldfiles", "bookmarks", "footer" },
+    parts = { "header", "new_buffer", "bookmarks", "footer" },
 }
 return settings
 
