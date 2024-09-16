@@ -158,13 +158,21 @@ resizerectangles(struct lock *lock)
 	}
 }
 
+unsigned int len;
+
 static void
 drawlogo(Display *dpy, struct lock *lock, int color)
 {
-	XSetForeground(dpy, lock->gc, lock->colors[color]);
+
+	XSetForeground(dpy, lock->gc, lock->colors[color == INPUT ? INIT : color]);
 	XFillRectangles(dpy, lock->win, lock->gc, lock->rectangles, LENGTH(rectangles));
+	XSetForeground(dpy, lock->gc, lock->colors[color]);
+	for (int i = 0; i < len; i++) {
+		XFillRectangle(dpy, lock->win, lock->gc, lock->rectangles[i].x, lock->rectangles[i].y, lock->rectangles[i].width, lock->rectangles[i].height);
+	}
 	XSync(dpy, False);
 }
+
 
 static void
 readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
@@ -173,7 +181,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
 	XRRScreenChangeNotifyEvent *rre;
 	char buf[32], passwd[256], *inputhash;
 	int caps, num, screen, running, failure, oldc;
-	unsigned int len, color, indicators;
+	unsigned int color, indicators;
 	KeySym ksym;
 	XEvent ev;
 
@@ -238,7 +246,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
 				break;
 			}
 			color = len ? (caps ? CAPS : INPUT) : (failure || failonclear ? FAILED : INIT);
-			if (running && oldc != color) {
+			if (running) {
 				for (screen = 0; screen < nscreens; screen++) {
 				    if(locks[screen]->bgmap)
 					XSetWindowBackgroundPixmap(dpy, locks[screen]->win, locks[screen]->bgmap);

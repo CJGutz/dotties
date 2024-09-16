@@ -1,0 +1,132 @@
+From e37f8981efe54bc620cb2f2280832cdab3959a32 Mon Sep 17 00:00:00 2001
+From: CJGutz <70779496+CJGutz@users.noreply.github.com>
+Date: Mon, Sep 16 2024 19:16:02 +0200
+Subject: [PATCH] Show password length
+
+3 files changed, 190 insertions(+), 17 deletions(-)
+
+Draws the logo at every key stroke to draw the number of rectangles 
+according to the current length written.
+---
+diff --git a/config/slock/config.def.h b/config/slock/config.def.h
+index 5cc3f7c..f00b8d5 100644
+--- a/config/slock/config.def.h
++++ b/config/slock/config.def.h
+@@ -28,22 +28,57 @@ static const int logosize = 75;
+ static const int logow = 12;	/* grid width and height for right center alignment*/
+ static const int logoh = 6;
+ 
++
++	               /* x  y  w  h */
++#define UNIT_RECT(x, y) { x, y, 1, 1 }
++
+ // 5 x 12
+-static XRectangle rectangles[12] = {
+-	/* x	y	w	h */
+-	{ 0,	0,	1,	4 }, // C
+-	{ 1,	0,	2,	1 },
+-	{ 0,	4,	3,	1 },
+-	{ 4,	0,	3,	1 }, // J
+-	{ 6,	0,	1,	4 },
+-	{ 4,	3,	1,	2 },
+-	{ 5,	4,	2,	1 },
+-	{ 8,	0,	1,	4 }, // G
+-	{ 9,	0,	3,	1 },
+-	{ 8,	4,	4,	1 },
+-	{ 11,	3,	1,	1 },
+-	{ 10,	2,	2,	1 },
++static XRectangle rectangles[33] = {
++	UNIT_RECT(2, 0), // C top right
++	UNIT_RECT(1, 0),
++
++	UNIT_RECT(0, 0),
++	UNIT_RECT(0, 1),
++	UNIT_RECT(0, 2),
++	UNIT_RECT(0, 3),
++	UNIT_RECT(0, 4),
++
++	UNIT_RECT(1, 4),
++	UNIT_RECT(2, 4),
++
++	UNIT_RECT(4, 3), // J center left
++	UNIT_RECT(4, 4),
++
++	UNIT_RECT(5, 4),
++	UNIT_RECT(6, 4),
++
++	UNIT_RECT(6, 3),
++	UNIT_RECT(6, 2),
++	UNIT_RECT(6, 1),
++	UNIT_RECT(6, 0),
++
++	UNIT_RECT(5, 0),
++	UNIT_RECT(4, 0),
++
++
++	UNIT_RECT(11, 0), // G top right
++	UNIT_RECT(10, 0),
++	UNIT_RECT(9, 0),
++
++	UNIT_RECT(8, 0),
++	UNIT_RECT(8, 1),
++	UNIT_RECT(8, 2),
++	UNIT_RECT(8, 3),
++
++	UNIT_RECT(8, 4),
++	UNIT_RECT(9, 4),
++	UNIT_RECT(10, 4),
++	UNIT_RECT(11, 4),
++
++	UNIT_RECT(11, 3),
+ 
++	UNIT_RECT(11, 2),
++	UNIT_RECT(10, 2),
+ };
+ 
+ /* time in seconds to cancel lock with mouse movement */
+diff --git a/config/slock/slock.c b/config/slock/slock.c
+index d230a52..26d7501 100644
+--- a/config/slock/slock.c
++++ b/config/slock/slock.c
+@@ -158,14 +158,22 @@ resizerectangles(struct lock *lock)
+ 	}
+ }
+ 
++unsigned int len;
++
+ static void
+ drawlogo(Display *dpy, struct lock *lock, int color)
+ {
+-	XSetForeground(dpy, lock->gc, lock->colors[color]);
++
++	XSetForeground(dpy, lock->gc, lock->colors[color == INPUT ? INIT : color]);
+ 	XFillRectangles(dpy, lock->win, lock->gc, lock->rectangles, LENGTH(rectangles));
++	XSetForeground(dpy, lock->gc, lock->colors[color]);
++	for (int i = 0; i < len; i++) {
++		XFillRectangle(dpy, lock->win, lock->gc, lock->rectangles[i].x, lock->rectangles[i].y, lock->rectangles[i].width, lock->rectangles[i].height);
++	}
+ 	XSync(dpy, False);
+ }
+ 
++
+ static void
+ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
+        const char *hash)
+@@ -173,7 +181,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
+ 	XRRScreenChangeNotifyEvent *rre;
+ 	char buf[32], passwd[256], *inputhash;
+ 	int caps, num, screen, running, failure, oldc;
+-	unsigned int len, color, indicators;
++	unsigned int color, indicators;
+ 	KeySym ksym;
+ 	XEvent ev;
+ 
+@@ -238,7 +246,7 @@ readpw(Display *dpy, struct xrandr *rr, struct lock **locks, int nscreens,
+ 				break;
+ 			}
+ 			color = len ? (caps ? CAPS : INPUT) : (failure || failonclear ? FAILED : INIT);
+-			if (running && oldc != color) {
++			if (running) {
+ 				for (screen = 0; screen < nscreens; screen++) {
+ 				    if(locks[screen]->bgmap)
+ 					XSetWindowBackgroundPixmap(dpy, locks[screen]->win, locks[screen]->bgmap);

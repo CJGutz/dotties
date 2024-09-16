@@ -28,22 +28,57 @@ static const int logosize = 75;
 static const int logow = 12;	/* grid width and height for right center alignment*/
 static const int logoh = 6;
 
-// 5 x 12
-static XRectangle rectangles[12] = {
-	/* x	y	w	h */
-	{ 0,	0,	1,	4 }, // C
-	{ 1,	0,	2,	1 },
-	{ 0,	4,	3,	1 },
-	{ 4,	0,	3,	1 }, // J
-	{ 6,	0,	1,	4 },
-	{ 4,	3,	1,	2 },
-	{ 5,	4,	2,	1 },
-	{ 8,	0,	1,	4 }, // G
-	{ 9,	0,	3,	1 },
-	{ 8,	4,	4,	1 },
-	{ 11,	3,	1,	1 },
-	{ 10,	2,	2,	1 },
 
+	               /* x  y  w  h */
+#define UNIT_RECT(x, y) { x, y, 1, 1 }
+
+// 5 x 12
+static XRectangle rectangles[33] = {
+	UNIT_RECT(2, 0), // C top right
+	UNIT_RECT(1, 0),
+
+	UNIT_RECT(0, 0),
+	UNIT_RECT(0, 1),
+	UNIT_RECT(0, 2),
+	UNIT_RECT(0, 3),
+	UNIT_RECT(0, 4),
+
+	UNIT_RECT(1, 4),
+	UNIT_RECT(2, 4),
+
+	UNIT_RECT(4, 3), // J center left
+	UNIT_RECT(4, 4),
+
+	UNIT_RECT(5, 4),
+	UNIT_RECT(6, 4),
+
+	UNIT_RECT(6, 3),
+	UNIT_RECT(6, 2),
+	UNIT_RECT(6, 1),
+	UNIT_RECT(6, 0),
+
+	UNIT_RECT(5, 0),
+	UNIT_RECT(4, 0),
+
+
+	UNIT_RECT(11, 0), // G top right
+	UNIT_RECT(10, 0),
+	UNIT_RECT(9, 0),
+
+	UNIT_RECT(8, 0),
+	UNIT_RECT(8, 1),
+	UNIT_RECT(8, 2),
+	UNIT_RECT(8, 3),
+
+	UNIT_RECT(8, 4),
+	UNIT_RECT(9, 4),
+	UNIT_RECT(10, 4),
+	UNIT_RECT(11, 4),
+
+	UNIT_RECT(11, 3),
+
+	UNIT_RECT(11, 2),
+	UNIT_RECT(10, 2),
 };
 
 /* time in seconds to cancel lock with mouse movement */
