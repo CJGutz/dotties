@@ -372,7 +372,6 @@ local servers = {
         diagnosticMode = 'workspace',
       },
     }
-
   },
   lua_ls = {
     Lua = {

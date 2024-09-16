@@ -10,8 +10,17 @@ return {
     "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
     "MunifTanjim/nui.nvim",
   },
+  opts = {
+    auto_clean_after_session_restore = false,
+  },
   config = function()
     require('neo-tree').setup {
+      auto_clean_after_session_restore = false,
+      window = {
+        mappings = {
+          ["<space>"] = { "toggle_node", nowait = true },
+        },
+      },
       close_if_last_window = true,
       follow_current_file = {
         enabled = true,          -- This will find and focus the file in the active buffer every time

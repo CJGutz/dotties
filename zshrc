@@ -108,6 +108,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+alias make="make -s" # Silent make. A lot cleaner for nested expressions
+
 alias docker-compose="docker compose"
 
 alias kubectl="microk8s kubectl"
@@ -137,6 +139,9 @@ alias gp='git_push_with_check'
 
 
 alias pgadmin='cd /usr/pgadmin4 && docker compose up'
+
+alias wget-all="wget -rkpN -e robots=off"
+
 
 git_push_with_check() {
     git push "$@"
@@ -184,6 +189,8 @@ fi
 # Set settings
 set -o vi
 
+# Set capslock to be escape key
+setxkbmap -option caps:escape
 
 # Exports
 
@@ -225,3 +232,17 @@ export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# opam configuration
+[[ ! -r /home/carl/.opam/opam-init/init.zsh ]] || source /home/carl/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# pnpm
+export PNPM_HOME="/home/carl/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
