@@ -49,6 +49,11 @@ OPENSCAD_IMGSIZE="${RNGR_OPENSCAD_IMGSIZE:-1000,1000}"
 OPENSCAD_COLORSCHEME="${RNGR_OPENSCAD_COLORSCHEME:-Tomorrow Night}"
 SQLITE_TABLE_LIMIT=20  # Display only the top <limit> tables in database, set to 0 for no exhaustive preview (only the sqlite_master table is displayed).
 SQLITE_ROW_LIMIT=5     # Display only the first and the last (<limit> - 1) records in each table, set to 0 for no limits.
+## Size of the preview if there are multiple options or it has to be
+## rendered from vector graphics. If the conversion program allows
+## specifying only one dimension while keeping the aspect ratio, the width
+## will be used.
+DEFAULT_SIZE="1920x1080"
 
 handle_extension() {
     case "${FILE_EXTENSION_LOWER}" in
@@ -130,15 +135,28 @@ handle_extension() {
             mediainfo "${FILE_PATH}" && exit 5
             exiftool "${FILE_PATH}" && exit 5
             ;; # Continue with next handler on failure
+
+        xopp)
+            preview_pdf="/tmp/$(basename "${FILE_PATH%.*}").pdf"
+            if $preview_pdf || xournalpp --create-pdf="${preview_pdf}" \
+                         "${FILE_PATH}";
+            then
+            pdftoppm -f 1 -l 1 \
+                     -scale-to-x "${DEFAULT_SIZE%x*}" \
+                     -scale-to-y -1 \
+                     -singlefile \
+                     -jpeg -tiffcompression jpeg \
+                     -- "${preview_pdf}" "${IMAGE_CACHE_PATH%.*}" \
+                    && rm "${preview_pdf}" \
+                    && exit 6
+            else
+                exit 1
+            fi
+            ;;
     esac
 }
 
 handle_image() {
-    ## Size of the preview if there are multiple options or it has to be
-    ## rendered from vector graphics. If the conversion program allows
-    ## specifying only one dimension while keeping the aspect ratio, the width
-    ## will be used.
-    local DEFAULT_SIZE="1920x1080"
 
     local mimetype="${1}"
     case "${mimetype}" in

@@ -1,15 +1,15 @@
 font:
   normal:
-    family: "MesloLGS NF"
+    family: "MesloLGSNerdFont"
     style: "Regular"
   bold:
-    family: "MesloLGS NF"
+    family: "MesloLGSNerdFont"
     style: "Bold"
   italic:
-    family: "MesloLGS NF"
+    family: "MesloLGSNerdFont"
     style: "Italic"
   bold_italic:
-    family: "MesloLGS NF"
+    family: "MesloLGSNerdFont"
     style: "BoldItalic"
   size: 12
 window:

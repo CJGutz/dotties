@@ -111,6 +111,13 @@ require('lazy').setup({
   { import = 'plugins' },
 }, {})
 
+require 'lualine'.setup {
+  sections = {
+    lualine_c = { 'filename', function()
+      return vim.o.spell and string.format('Spell %s', vim.o.spelllang) or ''
+    end },
+  }
+}
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
@@ -157,6 +164,19 @@ vim.o.termguicolors = true
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 
+-- Spelling
+vim.opt.spell = true
+vim.opt.spelllang = "en_us"
+
+vim.api.nvim_create_user_command('Spell', function(opts)
+  vim.opt.spelllang = opts.fargs[1]
+end, { nargs = 1, desc = 'Use specified language for spell check (en for English, nb for Norwegian)' })
+
+vim.api.nvim_create_user_command('SpellToggle', function(_)
+  vim.opt.spell = not vim.opt.spell
+  vim.print('Spellcheck is now ' .. ((vim.opt.spell and 'enabled') or 'disabled'))
+end, { nargs = 0, desc = 'Toggle spellcheck' })
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -174,9 +194,10 @@ end, { desc = 'Show warning for ctrl-z' })
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
--- Move highligted text around
+-- Move highlighted text around
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -221,7 +242,7 @@ vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash' },
+      'bash', 'glsl', 'regex', },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -317,6 +338,8 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
+  -- Pastify
+
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
 
@@ -334,15 +357,14 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
--- document existing key chains
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+require('which-key').add {
+  { '<leader>c', name = '[C]ode', },
+  { '<leader>d', name = '[D]ocument', },
+  { '<leader>g', name = '[G]it', },
+  { '<leader>h', name = 'More git', },
+  { '<leader>r', name = '[R]ename', },
+  { '<leader>s', name = '[S]earch', },
+  { '<leader>w', name = '[W]orkspace' },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
