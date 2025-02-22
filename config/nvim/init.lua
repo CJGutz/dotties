@@ -198,6 +198,14 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
+-- Key mapping for search and replace using the current search term
+vim.keymap.set(
+  { 'n', 'v' }, '<leader>su', [[:%s/<C-r>///gc<Left><Left><Left>]],
+  { noremap = true, silent = false, desc = "[Su]bsitute" }
+)
+
+-- Key map to save on Ctrl-S
+vim.keymap.set('n', '<C-s>', ':w<CR>', { silent = true, desc = 'Save file' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -427,6 +435,26 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+-- nvim java setting up jdtls
+require('java').setup()
+require('lspconfig').jdtls.setup({})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+
+local default_handler = vim.diagnostic.handlers.virtual_text
+vim.diagnostic.handlers.virtual_text = {
+	show = function(namespace, bufnr, diagnostics, opts)
+		for i, diagnostic in ipairs(diagnostics) do
+			if
+				diagnostic.source == "pyright" or diagnostic.source == "pylsp" -- You need to check what the correct value should be here
+			then
+				table.remove(diagnostics, i)
+			end
+		end
+		default_handler.show(namespace, bufnr, diagnostics, opts)
+	end,
+	hide = function(...) default_handler.hide(...) end,
+}
+
