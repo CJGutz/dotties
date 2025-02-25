@@ -48,7 +48,7 @@ DISABLE_MAGIC_FUNCTIONS="true"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -112,9 +112,6 @@ alias make="make -s" # Silent make. A lot cleaner for nested expressions
 
 alias docker-compose="docker compose"
 
-alias kubectl="microk8s kubectl"
-alias k=kubectl
-
 alias log="git log --graph --pretty='\''%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset'"
 
 alias gimmie-permissions="sudo chmod a+w -R ."
@@ -125,8 +122,6 @@ alias aslist="awk 'NR>1 {print $1}' | tr '\n' ' '"
 listrow() {
 	awk -v col="$1" 'NR>1 {print $col}' | tr '\n' ' '
 }
-
-alias ntnu-vpn="sudo openconnect vpn.ntnu.no -u carljgu@stud.ntnu.no"
 
 alias tar-open="tar -xvf"
 
@@ -196,6 +191,7 @@ setxkbmap -option caps:escape
 
 # Own scripts
 export PATH="$PATH:/home/carl/scripts"
+export PATH="$PATH:/home/carl/studies/concurrent-programming/auto-parallelization/llvm-project/build/bin"
 
 # Java
 export JAVA_HOME=/usr

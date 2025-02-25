@@ -1,6 +1,7 @@
 [user]
 	name = Carl Gützkow
 	email = 70779496+CJGutz@users.noreply.github.com
-	editor = nvim
 [init]
 	defaultBranch = main
+[core]
+	editor = nvim
