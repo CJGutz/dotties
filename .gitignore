@@ -1,8 +1,6 @@
 tags
 test.sh
 .luarc.json
-
+spell
 **/*/extensions/*
 **/*/__pycache__/*
-
-**/*/spell/*
