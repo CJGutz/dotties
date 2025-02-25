@@ -2,5 +2,7 @@ tags
 test.sh
 .luarc.json
 spell
+sb-scripts
+dwmblocks
 **/*/extensions/*
 **/*/__pycache__/*
