@@ -164,12 +164,11 @@ static uint forcemousemod = ShiftMask;
  * Beware that overloading Button1 will disable the selection.
  */
 static MouseShortcut mshortcuts[] = {
-    /* mask                 button   function        argument      release alt
-     */
+    /* mask                 button   function        argument      release	alt */
+    {XK_ANY_MOD, Button4, kscrollup, {.i = 1}, 0, -1},
+    {XK_ANY_MOD, Button5, kscrolldown, {.i = 1}, 0, -1},
     {XK_ANY_MOD, Button2, selpaste, {.i = 0}, 1},
-    {XK_ANY_MOD, Button4, ttysend, {.s = "\033[5;2~"}, 0, -1},
     {XK_ANY_MOD, Button4, ttysend, {.s = "\031"}},
-    {XK_ANY_MOD, Button5, ttysend, {.s = "\033[6;2~"}, 0, -1},
     {XK_ANY_MOD, Button5, ttysend, {.s = "\005"}},
 };
 
