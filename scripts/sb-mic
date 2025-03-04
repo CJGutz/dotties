@@ -1,0 +1,23 @@
+#!/bin/bash
+
+current_source=$(pactl info | grep "Default Source" | cut -f3 -d" ")
+source_info=$(pactl list sources | grep -A10 $current_source)
+
+case $BLOCK_BUTTON in
+	1) setsid -w -f "$TERMINAL" -e pulsemixer; pkill -RTMIN+20 "${STATUSBAR:-dwmblocks}" ;;
+	2) pactl set-source-mute $current_source toggle ;;
+	4) pactl set-source-volume $current_source +10% ;;
+	5) pactl set-source-volume $current_source -10% ;;
+	3) killall -q notify-osd && notify-send "🎤 Mic module" "\- Shows microphone volume, (🎤 -) if muted.
+- Click to open pulsemixer
+- Middle click to mute.
+- Scroll to change." ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+
+if grep -q "Mute: no" <<< $source_info; then
+	grep Volume <<< $source_info | xargs | awk '{printf "🎤 %s", $5}'
+else 
+	echo "🎤 -"
+fi

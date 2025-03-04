@@ -192,7 +192,6 @@ setxkbmap -option caps:escape
 # Own scripts
 export PATH="$PATH:/home/carl/scripts"
 export PATH="$PATH:/home/carl/studies/concurrent-programming/auto-parallelization/llvm-project/build/bin"
-export PATH="$PATH:/home/carl/dotties/config/sb-scripts"
 
 # Java
 export JAVA_HOME=/usr
