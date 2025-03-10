@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Prints the status of Bluetooth connections
+uuids=$(bluetoothctl paired-devices | cut -f2 -d' ')
+devices=$(echo "$uuids" | while read uuid; do bluetoothctl info $uuid; done | grep -e "Connected\|Name")
+num_connected=$(echo $devices | grep "Connected: yes" | wc -l)
+
+printf "💙"
+case $num_connected in 
+	0) ;;
+	1) printf " $( echo "$devices"  | xargs -L2 | grep yes | sed -e 's/Name: //' -e 's/Connected: yes//')" ;;
+	*) printf " $num_connected" ;;
+esac
+
+# From 'Name: <name>\n Connected: <yes/no>' to 'device: <yes/no>'
+device_list=$(echo "$devices" | xargs -L2 | sed  -e 's/Name: //' -e 's/ Connected:/:\t/')
+
+case $BLOCK_BUTTON in
+	1) setsid -w -f "$TERMINAL" -e bluetoothctl;;
+	2) bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl connect $uuid; done ;;
+	3) killall -q notify-osd && notify-send "💙 Bluetooth" "\- Shows number of connected devices or the device connected,
+- Click to open bluetoothctl
+- Middle click to try to connect to all paired devices
+----
+$device_list" ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+

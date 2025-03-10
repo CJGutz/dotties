@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Prints the status of monitors
+
+num_monitors=$(xrandr | grep " connected " | wc -l)
+case $num_monitors in 
+	1) ;;
+	2) printf "🖥" ;;
+	*) printf "🖥 $(($num_monitors - 1))" ;;
+esac
+
+default_screen="eDP"
+hdmi_port="HDMI-A-0"
+
+
+case $BLOCK_BUTTON in
+	1) xrandr --auto; nitrogen --restore ;;
+	#2) xrandr --output $(HDMI-A-0); nitrogen --restore ;;
+	3) killall -q notify-osd && notify-send "🖥 Monitors" "\- Displays number of connected devices if any.
+- Click to open bluetoothctl
+- Middle click to try to connect to all paired devices" ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
