@@ -106,6 +106,11 @@ require('lazy').setup({
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
     },
+    config = function()
+      require('treesitter-context').setup {
+        max_lines = 4
+      }
+    end,
   },
 
   { import = 'plugins' },
@@ -397,6 +402,7 @@ local servers = {
   pyright = {
     python = {
       analysis = {
+        autoImportCompletions = true,
         autoSearchPaths = true,
         useLibraryCodeForTypes = false,
         diagnosticMode = 'workspace',

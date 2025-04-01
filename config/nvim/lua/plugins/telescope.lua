@@ -63,6 +63,7 @@ return {
   },
   {
     "fdschmidt93/telescope-egrepify.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+    commit = "36e205be2070fcd3a28378a76357c881ffdf1b8e",
   }
 }

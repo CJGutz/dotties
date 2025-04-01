@@ -1935,7 +1935,12 @@ woman-bouncing-ball	⛹️‍♀️
 man-bouncing-ball	⛹️‍♂️
 "
 
-line=$(echo -n "$emoji_list" | dmenu -p "Choose an emoji!");
-emoji=$(echo -n "$line" | cut -f2 -);
+emoji_file=~/dotties/scripts/emojis.txt
+tmpfile=/tmp/selected-emoji
+st -n "emoji-search" -g "120x34" -e bash -c " 
+    fzf --no-hscroll < $emoji_file | cut -d' ' -f1 > $tmpfile
+" 
+emoji=$(cat $tmpfile)
+# Avoid newline from cat
 echo -n "$emoji" | xclip -selection clipboard
 echo -n "$emoji" | xdotool type --file -

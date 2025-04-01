@@ -16,6 +16,7 @@ return {
     vim.keymap.set('n', '<C-P>', ':BufferPick<CR>', { desc = "Select buffer to go to" })
     vim.keymap.set('n', '<C-Q>', ':BufferClose<CR>', { desc = "Close current buffer" })
     vim.keymap.set('n', '<C-D>', ':BufferPickDelete<CR>', { desc = "Select buffers to delete" })
+    vim.keymap.set('n', '<C-N>', ':BufferOrderByBufferNumber<CR>', { desc = "Order buffers by buffer number" })
   end,
   version = '^1.0.0',
 }
