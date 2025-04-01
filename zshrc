@@ -159,6 +159,7 @@ whatis() {
     if [ $? -eq 16 ]; then
         echo "man: $(man $1 | grep "$1 - " | xargs)"
     fi
+    type $1
 }
 
 find-file() {
@@ -166,15 +167,15 @@ find-file() {
 }
 
 # Devour aliases
-alias evince="devour evince"
-alias display="devour display"
+alias evince="evince"
+alias display="display"
 alias eog="devour eog"
 alias gimp="devour gimp"
 alias libreoffice="devour libreoffice"
-alias mpv="devour mpv --keep-open=yes"
-alias pqiv="devour pqiv"
-alias surf="devour surf"
-alias qgis='devour qgis'
+alias mpv="mpv --keep-open=yes"
+alias pqiv="pqiv"
+alias surf="surf"
+alias qgis='qgis'
 
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then
@@ -242,3 +243,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# nvim
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"

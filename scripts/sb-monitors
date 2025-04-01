@@ -2,15 +2,25 @@
 
 # Prints the status of monitors
 
-num_monitors=$(xrandr | grep " connected " | wc -l)
+default_screen="eDP"
+
+connected_monitors=$(xrandr | grep " connected ")
+last_port_connected=$(echo "$connected_monitors" | tail -n1 | cut -d' ' -f1)
+num_monitors=$(echo "$connected_monitors" | wc -l)
+
+case $num_monitors in
+	1) xrandr --auto ;;
+	*) xrandr --output $last_port_connected --auto --above $default_screen ;;
+esac
+
+nitrogen --restore > /dev/null
+
 case $num_monitors in 
 	1) ;;
 	2) printf "🖥" ;;
 	*) printf "🖥 $(($num_monitors - 1))" ;;
 esac
 
-default_screen="eDP"
-hdmi_port="HDMI-A-0"
 
 
 case $BLOCK_BUTTON in

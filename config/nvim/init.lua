@@ -170,7 +170,7 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 
 -- Spelling
-vim.opt.spell = true
+vim.opt.spell = false
 vim.opt.spelllang = "en_us"
 
 vim.api.nvim_create_user_command('Spell', function(opts)
@@ -442,8 +442,7 @@ mason_lspconfig.setup_handlers {
   end,
 }
 -- nvim java setting up jdtls
-require('java').setup()
-require('lspconfig').jdtls.setup({})
+-- See plugins for java setup
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

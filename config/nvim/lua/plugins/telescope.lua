@@ -64,6 +64,7 @@ return {
   {
     "fdschmidt93/telescope-egrepify.nvim",
     dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-    commit = "36e205be2070fcd3a28378a76357c881ffdf1b8e",
+    -- The next commit fails "TS highlighter that directly parse result window"
+    commit = "03962ea784d994a786bbe7226abb333c7215e638",
   }
 }

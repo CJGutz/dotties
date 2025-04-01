@@ -1,7 +1,7 @@
 return {
   'TobinPalmer/pastify.nvim',
   cmd = { 'Pastify', 'PastifyAfter' },
-  event = { 'BufReadPost' }, -- Load after the buffer is read, I like to be able to paste right away
+  event = { 'VeryLazy' }, -- Load after the buffer is read, I like to be able to paste right away
   keys = {
     { noremap = true, mode = "x", '<leader>p', "<cmd>PastifyAfter<CR>" },
     { noremap = true, mode = "n", '<leader>p', "<cmd>PastifyAfter<CR>" },

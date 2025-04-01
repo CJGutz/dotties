@@ -1,5 +1,6 @@
 return {
   "tomtomjhj/coq-lsp.nvim",
+  event = "VeryLazy",
   dependencies = {
     "neovim/nvim-lspconfig",
     "whonore/Coqtail"
