@@ -59,10 +59,17 @@ require('lazy').setup({
 
   {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
+    'olimorris/onedarkpro.nvim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'onedark'
+      function ToggleTheme()
+        if vim.o.background == "dark" then
+          vim.cmd("colorscheme onelight")
+        else
+          vim.cmd("colorscheme onedark")
+        end
+      end
     end,
   },
 
@@ -154,6 +161,27 @@ vim.o.smartcase = true
 
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '✗',
+      [vim.diagnostic.severity.WARN] = '!',
+      [vim.diagnostic.severity.HINT] = '➤',
+      [vim.diagnostic.severity.INFO] = 'ℹ',
+    }
+  },
+  underline = {
+    severity = { min = vim.diagnostic.severity.ERROR }
+  },
+  float = {
+    border = 'rounded', -- se :h winborder
+    header = '',
+  },
+  virtual_text = {
+    prefix = '▎', -- Could be '●', '▎', 'x'
+    spacing = 6,
+  }
+})
 
 -- Decrease update time
 vim.o.updatetime = 50
@@ -167,7 +195,6 @@ vim.o.termguicolors = true
 
 -- Scrolling
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
 
 -- Spelling
 vim.opt.spell = false
@@ -194,6 +221,9 @@ vim.keymap.set({ 'n', 'v', 'i' }, '<C-z>', function()
   vim.api.nvim_command 'echo "Noob. You cannot even exit vim"'
   vim.api.nvim_command 'echohl None'
 end, { desc = 'Show warning for ctrl-z' })
+
+-- Map Ctrl+H & Ctrl-Backspace to delete word backwards
+vim.keymap.set('i', '<C-H>', '<C-W>')
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -255,8 +285,11 @@ vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash', 'glsl', 'regex', },
+      'bash', 'glsl', 'regex' },
 
+    sync_install = false,
+    ignore_install = {},
+    modules = {},
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
 
@@ -319,8 +352,11 @@ vim.defer_fn(function()
 end, 0)
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '<leader>dp', function() vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_prev() }) end,
+  { desc = 'Go to [p]revious [d]iagnostic message' })
+-- vim.jump(vim.diagnostic.next(1))
+vim.keymap.set('n', '<leader>dn', function() vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_next() }) end,
+  { desc = 'Go to [n]ext [d]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
@@ -394,19 +430,39 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
+  clangd = {
+    -- Use -DCMAKE_EXPORT_COMPILE_COMMANDS=1 to generate compile_commands.json in build directory
+    -- Symbolically link with ln -s build/compile_commands.json compile_commands.json
+    -- Optionally put compile_commands.json in .gitignore
+    cmd = {
+      'clangd',
+      '--all-scopes-completion',
+      '--background-index',
+      '--clang-tidy',
+      '--enable-config', -- clangd 11+ supports reading from .clangd configuration file
+      '--function-arg-placeholders',
+      '--header-insertion=iwyu',
+      '--pch-storage=memory', -- could also be disk
+      '--suggest-missing-includes',
+      '-j=4',                 -- number of workers
+      '--log=error',
+    },
+    init_options = {
+      compilationDatabasePath = vim.fn.getcwd() .. '/build',
+      usePlaceholders = true,
+      completeUnimported = true,
+      clangdFileStatus = true,
+    },
+  },
   -- gopls = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-  pyright = {
-    python = {
-      analysis = {
-        autoImportCompletions = true,
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = false,
-        diagnosticMode = 'workspace',
-      },
+  pylsp = {
+    plugins = {
+      pycodestyle = { enabled = true },
+      flake8 = { enabled = true, maxLineLength = 120 },
+      pyflakes = { enabled = true }
     }
   },
   lua_ls = {
@@ -429,6 +485,7 @@ local mason_lspconfig = require 'mason-lspconfig'
 
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
+  automatic_installation = true,
 }
 
 mason_lspconfig.setup_handlers {
@@ -446,20 +503,3 @@ mason_lspconfig.setup_handlers {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
-
-local default_handler = vim.diagnostic.handlers.virtual_text
-vim.diagnostic.handlers.virtual_text = {
-	show = function(namespace, bufnr, diagnostics, opts)
-		for i, diagnostic in ipairs(diagnostics) do
-			if
-				diagnostic.source == "pyright" or diagnostic.source == "pylsp" -- You need to check what the correct value should be here
-			then
-				table.remove(diagnostics, i)
-			end
-		end
-		default_handler.show(namespace, bufnr, diagnostics, opts)
-	end,
-	hide = function(...) default_handler.hide(...) end,
-}
-

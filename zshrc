@@ -246,3 +246,5 @@ esac
 
 # nvim
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+[ -f "/home/carl/.ghcup/env" ] && . "/home/carl/.ghcup/env" # ghcup-env

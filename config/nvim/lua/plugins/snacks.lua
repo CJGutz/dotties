@@ -7,6 +7,7 @@ return {
       enabled = true,
       max_width = 80,
     },
+    bigfile = { enabled = true, },
     dim = {
       enabled = true,
     },
