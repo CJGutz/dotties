@@ -171,7 +171,7 @@ vim.diagnostic.config({
     }
   },
   underline = {
-    severity = { min = vim.diagnostic.severity.ERROR }
+    severity = { min = vim.diagnostic.severity.WARN }
   },
   float = {
     border = 'rounded', -- se :h winborder
@@ -182,6 +182,10 @@ vim.diagnostic.config({
     spacing = 6,
   }
 })
+vim.cmd([[
+  highlight DiagnosticUnderlineError guifg=fg guisp=red gui=underline
+  highlight DiagnosticUnderlineWarn guifg=fg guisp=yellow gui=underline
+]])
 
 -- Decrease update time
 vim.o.updatetime = 50
@@ -255,7 +259,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-require('telescope').setup {
+local telescope = require('telescope')
+telescope.setup {
   extensions = {
     media_files = {
       filetypes = { 'png', 'webp', 'jpg', 'jpeg', 'JPG' },
@@ -273,9 +278,9 @@ require('telescope').setup {
 }
 
 -- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
-pcall(require('telescope').load_extension, 'media_files')
-pcall(require('telescope').load_extension, 'egrepify')
+pcall(telescope.load_extension, 'fzf')
+pcall(telescope.load_extension, 'media_files')
+pcall(telescope.load_extension, 'egrepify')
 
 
 -- [[ Configure Treesitter ]]
@@ -351,11 +356,24 @@ vim.defer_fn(function()
   }
 end, 0)
 
+-- Check if diagnostic location is valid
+-- If it is not, notify the users
+-- Otherwise, jump to the location
+local function try_jump_to_diagnostic(location)
+  if not location then
+    vim.notify('No diagnostic messages')
+    return
+  end
+  vim.diagnostic.jump({ diagnostic = location })
+end
+
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>dp', function() vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_prev() }) end,
-  { desc = 'Go to [p]revious [d]iagnostic message' })
--- vim.jump(vim.diagnostic.next(1))
-vim.keymap.set('n', '<leader>dn', function() vim.diagnostic.jump({ diagnostic = vim.diagnostic.get_next() }) end,
+vim.keymap.set('n', '<leader>dp', function()
+  try_jump_to_diagnostic(vim.diagnostic.get_prev())
+end, { desc = 'Go to [p]revious [d]iagnostic message' })
+vim.keymap.set('n', '<leader>dn', function()
+  try_jump_to_diagnostic(vim.diagnostic.get_next())
+end,
   { desc = 'Go to [n]ext [d]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
@@ -380,12 +398,13 @@ local on_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   -- nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  local telescope_builtin = require('telescope.builtin')
+  nmap('gd', telescope_builtin.lsp_definitions, '[G]oto [D]efinition')
+  nmap('gr', telescope_builtin.lsp_references, '[G]oto [R]eferences')
+  nmap('gI', telescope_builtin.lsp_implementations, '[G]oto [I]mplementation')
+  nmap('<leader>D', telescope_builtin.lsp_type_definitions, 'Type [D]efinition')
+  nmap('<leader>ds', telescope_builtin.lsp_document_symbols, '[D]ocument [S]ymbols')
+  nmap('<leader>ws', telescope_builtin.lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- Pastify
 
