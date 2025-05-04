@@ -183,8 +183,8 @@ vim.diagnostic.config({
   }
 })
 vim.cmd([[
-  highlight DiagnosticUnderlineError guifg=fg guisp=red gui=underline
-  highlight DiagnosticUnderlineWarn guifg=fg guisp=yellow gui=underline
+  highlight DiagnosticUnderlineError guifg=nil guisp=red gui=underline
+  highlight DiagnosticUnderlineWarn guifg=nil guisp=yellow gui=underline
 ]])
 
 -- Decrease update time
@@ -289,8 +289,7 @@ pcall(telescope.load_extension, 'egrepify')
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash', 'glsl', 'regex' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'glsl', 'regex', 'haskell' },
 
     sync_install = false,
     ignore_install = {},
