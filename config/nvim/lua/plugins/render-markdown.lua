@@ -12,7 +12,6 @@ return {
   config = function()
     require("render-markdown").setup({
       latex = {
-          top_pad = 1,
           command = "latex2text",
       },
     })

@@ -289,7 +289,7 @@ pcall(telescope.load_extension, 'egrepify')
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'glsl', 'regex', 'haskell' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'glsl', 'regex', 'haskell', 'latex' },
 
     sync_install = false,
     ignore_install = {},
@@ -297,7 +297,7 @@ vim.defer_fn(function()
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
 
-    highlight = { enable = true },
+    highlight = { enable = true, disable = { 'latex' } },
     indent = { enable = true },
     incremental_selection = {
       enable = true,
