@@ -15,7 +15,7 @@ return {
       local lspkind = require('lspkind')
 
       local t = function(str)
-	return vim.api.nvim_replace_termcodes(str, true, true, true)
+        return vim.api.nvim_replace_termcodes(str, true, true, true)
       end
 
       cmp.setup {
@@ -32,12 +32,15 @@ return {
           ["<C-e>"] = cmp.mapping.abort(),
           ['<CR>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Insert,
-            select = true,
           },
           ["<c-space>"] = cmp.mapping.complete(),
           ["<C-n>"] = function(fallback)
             if cmp.visible() then
-              cmp.select_next_item()
+              if #cmp.get_entries() == 1 then
+                cmp.confirm({ select = true })
+              else
+                cmp.select_next_item()
+              end
             else
               fallback()
             end
@@ -52,11 +55,10 @@ return {
         },
         sources = {
           { name = "nvim_lsp", keyword_length = 2, max_item_count = 20, priority = 100 },
-          { name = "path", max_item_count = 5, priority = 4 },
-          { name = "vsnip", max_item_count = 5, priority = 3 },
+          { name = "path",     max_item_count = 5, priority = 4 },
+          { name = "vsnip",    max_item_count = 5, priority = 3 },
           { name = "nvim_lua", max_item_count = 5, priority = 2 },
-          { name = "buffer", keyword_length = 3, priority = 1},
-
+          { name = "buffer",   keyword_length = 3, priority = 1,        max_item_count = 3 },
         },
         preselect = cmp.PreselectMode.None,
         formatting = {
@@ -67,16 +69,16 @@ return {
           },
           expandable_indicator = true,
           format = lspkind.cmp_format {
-            with_text = true,
+            with_text = false,
             menu = {
               nvim_lsp = "[LSP]",
               path = "[path]",
+              vsnip = "[snip]",
               buffer = "[buf]",
             }
           }
         },
         experimental = {
-          native_menu = false,
           ghost_text = true,
         }
       }

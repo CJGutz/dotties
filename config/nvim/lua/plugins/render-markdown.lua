@@ -14,6 +14,10 @@ return {
       latex = {
           command = "latex2text",
       },
+      render_modes = { 'n', 'c', 't', 'i' },
+      code = {
+        border = "thick"
+      }
     })
   end,
 }

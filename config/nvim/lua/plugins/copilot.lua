@@ -16,6 +16,7 @@ return {
       ["c++"] = true,
       ["go"] = true,
       ["python"] = true,
+      ["haskell"] = false
     }
   end
 

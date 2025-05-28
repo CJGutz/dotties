@@ -17,7 +17,7 @@ device_list=$(echo "$devices" | xargs -L2 | sed  -e 's/Name: //' -e 's/ Connecte
 
 case $BLOCK_BUTTON in
 	1) setsid -w -f "$TERMINAL" -e bluetoothctl;;
-	2) bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl connect $uuid; done ;;
+	2) bluetoothctl devices | cut -f2 -d' ' | while read uuid; do bluetoothctl --timeout=1 connect $uuid; done ;;
 	3) killall -q notify-osd && notify-send "💙 Bluetooth" "\- Shows number of connected devices or the device connected,
 - Click to open bluetoothctl
 - Middle click to try to connect to all paired devices

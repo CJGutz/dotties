@@ -20,7 +20,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- NOTE: Here is where you install your plugins.
+-- NOTE: Here is where you install and configure your plugins.
 --  You can configure plugins using the `config` key.
 --
 --  You can also configure plugins after the setup call,
@@ -371,8 +371,8 @@ vim.keymap.set('n', '<leader>dp', function()
   try_jump_to_diagnostic(vim.diagnostic.get_prev())
 end, { desc = 'Go to [p]revious [d]iagnostic message' })
 vim.keymap.set('n', '<leader>dn', function()
-  try_jump_to_diagnostic(vim.diagnostic.get_next())
-end,
+    try_jump_to_diagnostic(vim.diagnostic.get_next())
+  end,
   { desc = 'Go to [n]ext [d]iagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
@@ -408,7 +408,7 @@ local on_attach = function(_, bufnr)
   -- Pastify
 
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  nmap('K', function () vim.lsp.buf.hover { border = "rounded", max_height = 25, max_width = 120 } end, 'Hover Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -476,12 +476,42 @@ local servers = {
   rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-  pylsp = {
-    plugins = {
-      pycodestyle = { enabled = true },
-      flake8 = { enabled = true, maxLineLength = 120 },
-      pyflakes = { enabled = true }
-    }
+  -- pylsp = {
+  --   plugins = {
+  --     pycodestyle = { enabled = true },
+  --     flake8 = { enabled = true, maxLineLength = 120 },
+  --     pyflakes = { enabled = true }
+  --   },
+  --   root_markers = {
+  --     'pyproject.toml',
+  --     'setup.py',
+  --     'setup.cfg',
+  --     'requirements.txt',
+  --     'Pipfile',
+  --     '.git',
+  --   },
+  -- },
+  pyright = {
+    python = {
+      venvPath = '~/telescope/Backend/.venv/'
+    },
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = 'openFilesOnly',
+        },
+      },
+    },
+    root_markers = {
+      'pyproject.toml',
+      'setup.py',
+      'setup.cfg',
+      'requirements.txt',
+      'Pipfile',
+      '.git',
+    },
   },
   lua_ls = {
     Lua = {
@@ -521,3 +551,5 @@ mason_lspconfig.setup_handlers {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+vim.filetype.add({extension = {afp = "rust"}})  -- Temporary for afp project
