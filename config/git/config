@@ -24,7 +24,7 @@
 
 [advice]  # disable advices
     addEmptyPathspec = false
-    pushNonFastForward = false
+    # pushNonFastForward = false
     statusHints = false
 
 [blame]
@@ -32,9 +32,13 @@
     date = relative
 
 [diff]
+    tool = vimdiff
     context = 3  # less context in diffs
     renames = copies  # detect copies as renames in diffs
     interHunkContext = 10  # merge near hunks in diffs
+
+[difftool]
+    prompt = false
 
 [status]
     branch = true
@@ -43,8 +47,8 @@
     showUntrackedFiles = all  # show individual untracked files
 
 [push]
-    autoSetupRemote = true
-    default = current  # push only current branch by default
+    # autoSetupRemote = false
+    # default = current  # push only current branch by default
     followTags = true  # push also tags
 
 [pull]

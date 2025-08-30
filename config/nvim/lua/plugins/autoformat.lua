@@ -8,7 +8,7 @@ return {
   config = function()
     -- Switch for controlling whether you want autoformatting.
     --  Use :KickstartFormatToggle to toggle autoformatting on or off
-    local format_is_enabled = false
+    local format_is_enabled = true
     vim.api.nvim_create_user_command('KickstartFormatToggle', function()
       format_is_enabled = not format_is_enabled
       print('Setting autoformatting to: ' .. tostring(format_is_enabled))
@@ -41,12 +41,6 @@ return {
 
         -- Only attach to clients that support document formatting
         if not client.server_capabilities.documentFormattingProvider then
-          return
-        end
-
-        -- Tsserver usually works poorly. Sorry you work with bad languages
-        -- You can remove this line if you know what you're doing :)
-        if client.name == 'tsserver' and false then
           return
         end
 

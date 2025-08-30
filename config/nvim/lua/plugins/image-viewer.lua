@@ -4,6 +4,7 @@ return {
     opts = {
         processor = "magick_cli",
     },
+    commit = "4206c48a9f764a63f43022d6ab90ec04946bbc68",
     config = function ()
       require("image").setup({
         backend = "ueberzug",

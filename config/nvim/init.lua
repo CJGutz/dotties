@@ -42,12 +42,12 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       -- Automatically install LSPs to stdpath for neovim
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
+      { 'williamboman/mason.nvim',           tag = 'v1.11.0' },
+      { 'williamboman/mason-lspconfig.nvim', tag = 'v1.32.0' },
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+      { 'j-hui/fidget.nvim',                 tag = 'legacy', opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -259,6 +259,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local function filenameFirst(_, path)
+  local tail = vim.fs.basename(path)
+  local parent = vim.fs.dirname(path)
+  if parent == "." then return tail end
+  return string.format("%s\t\t%s", tail, parent)
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "TelescopeResults",
+  callback = function(ctx)
+    vim.api.nvim_buf_call(ctx.buf, function()
+      vim.fn.matchadd("TelescopeParent", "\t\t.*$")
+      vim.api.nvim_set_hl(0, "TelescopeParent", { link = "Comment" })
+    end)
+  end,
+})
 local telescope = require('telescope')
 telescope.setup {
   extensions = {
@@ -274,6 +290,7 @@ telescope.setup {
         ['<C-d>'] = false,
       },
     },
+    path_display = filenameFirst
   },
 }
 
@@ -408,7 +425,8 @@ local on_attach = function(_, bufnr)
   -- Pastify
 
   -- See `:help K` for why this keymap
-  nmap('K', function () vim.lsp.buf.hover { border = "rounded", max_height = 25, max_width = 120 } end, 'Hover Documentation')
+  nmap('K', function() vim.lsp.buf.hover { border = "rounded", max_height = 25, max_width = 120 } end,
+    'Hover Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -552,4 +570,4 @@ mason_lspconfig.setup_handlers {
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-vim.filetype.add({extension = {afp = "rust"}})  -- Temporary for afp project
+vim.filetype.add({ extension = { afp = "rust" } }) -- Temporary for afp project

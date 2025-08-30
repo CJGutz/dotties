@@ -166,6 +166,16 @@ find-file() {
     find ./ -name "*$1*"
 }
 
+# Create a folder with the name of the file and move the file into it with the new name
+# $1: file with extension
+# $2: new name of the file inside the folder
+expand-file-as-folder() {
+    filename=$(echo $1 | cut -d. -f1)
+    ext=$(echo $1 | cut -d. -f2)
+    mkdir -p $filename  # Create folder without extension
+    mv "$1" "$filename/$2.$ext"  # Move and rename file
+}
+
 # Devour aliases
 alias evince="evince"
 alias display="display"

@@ -15,7 +15,7 @@ return {
         },
       },
     },
-    branch = 'master',
+    branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
