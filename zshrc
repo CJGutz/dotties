@@ -177,15 +177,10 @@ expand-file-as-folder() {
 }
 
 # Devour aliases
-alias evince="evince"
-alias display="display"
 alias eog="devour eog"
 alias gimp="devour gimp"
 alias libreoffice="devour libreoffice"
 alias mpv="mpv --keep-open=yes"
-alias pqiv="pqiv"
-alias surf="surf"
-alias qgis='qgis'
 
 # Use zsh secret configuration if exists
 if [ -f ~/.zsh_secrets ]; then
